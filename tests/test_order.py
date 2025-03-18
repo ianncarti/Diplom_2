@@ -11,19 +11,19 @@ class TestCreateOrder:
     def test_create_order_with_auth(self, create_login_delete_account):
         _, __, ___, token = create_login_delete_account
 
-        create_order_response = requests.post(AppUrls.order_url, data=IngredientsData.payload,
+        create_order_response = requests.post(AppUrls.order_url, data=IngredientsData.PAYLOAD,
                                               headers={'authorization': token})
 
         assert create_order_response.status_code == 200
-        assert AppResponseMessages.order_number in create_order_response.text
+        assert AppResponseMessages.ORDER_NUMBER in create_order_response.text
 
     @allure.title('Создание заказа с без авторизации')
     @allure.description('Создаём заказ незалогиненным юзером. Сверяем код и текст ошибки')
     def test_create_order_no_auth(self):
-        create_order_response = requests.post(AppUrls.order_url, data=IngredientsData.payload)
+        create_order_response = requests.post(AppUrls.order_url, data=IngredientsData.PAYLOAD)
 
         assert create_order_response.status_code == 200
-        assert AppResponseMessages.order_number in create_order_response.text
+        assert AppResponseMessages.ORDER_NUMBER in create_order_response.text
 
     @allure.title('Создание заказа без ингридиентов')
     @allure.description('Создаём заказ без тела запроса. Сверяем код и текст ошибки')
@@ -33,7 +33,7 @@ class TestCreateOrder:
         create_order_response = requests.post(AppUrls.order_url, headers={'authorization': token})
 
         assert create_order_response.status_code == 400
-        assert AppResponseMessages.need_ingredients_error in create_order_response.text
+        assert AppResponseMessages.NEED_INGREDIENTS_ERROR in create_order_response.text
 
     @allure.title('Создание заказа с невалидными ингридиентами')
     @allure.description('Создание заказа с невалидным id ингридиентов в теле запроса')
@@ -46,7 +46,7 @@ class TestCreateOrder:
                                               headers={'authorization': token})
 
         assert create_order_response.status_code == 500
-        assert AppResponseMessages.wrong_ingredients_error in create_order_response.text
+        assert AppResponseMessages.WRONG_INGREDIENTS_ERROR in create_order_response.text
 
 
 class TestGetOrder:
@@ -59,7 +59,7 @@ class TestGetOrder:
         get_order_response = requests.get(AppUrls.order_url, headers={'authorization': token})
 
         assert get_order_response.status_code == 200
-        assert AppResponseMessages.success_message in get_order_response.text
+        assert AppResponseMessages.SUCCESS_MESSAGE in get_order_response.text
 
     @allure.title('Получение заказа юзера без авторизации')
     @allure.description('Отправляем запрос на получение заказа без передачи токена. Сверяем код и текст ошибки')
@@ -67,4 +67,4 @@ class TestGetOrder:
         get_order_response = requests.get(AppUrls.order_url, headers={'authorization': ""})
 
         assert get_order_response.status_code == 401
-        assert AppResponseMessages.no_auth_error in get_order_response.text
+        assert AppResponseMessages.NO_AUTH_ERROR in get_order_response.text

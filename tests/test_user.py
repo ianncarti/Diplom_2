@@ -15,7 +15,7 @@ class TestUserCreate:
         payload = generate_uniq_creds()
         response = requests.post(AppUrls.user_create_url, data=payload)
         assert response.status_code == 200
-        assert AppResponseMessages.success_message in response.text
+        assert AppResponseMessages.SUCCESS_MESSAGE in response.text
 
         #удаление юзера после теста
         token = response.json()['accessToken']
@@ -33,7 +33,7 @@ class TestUserCreate:
         requests.post(AppUrls.user_create_url, data=payload)
         response = requests.post(AppUrls.user_create_url, data=payload)
         assert response.status_code == 403
-        assert AppResponseMessages.user_exists_error in response.text
+        assert AppResponseMessages.USER_EXISTS_ERROR in response.text
 
     @allure.title('Регистрация пользователя с пустым обязательным полем')
     @allure.description('Отправляем запрос с пустым обязательным полем. Пустое поле подменяется с помощью параметризации')
@@ -43,7 +43,7 @@ class TestUserCreate:
         payload.pop(required_field)
         response = requests.post(AppUrls.user_create_url, data=payload)
         assert response.status_code == 403
-        assert AppResponseMessages.required_fields_error in response.text
+        assert AppResponseMessages.REQUIRED_FIELDS_ERROR in response.text
 
 class TestUserLogin:
 
@@ -78,7 +78,7 @@ class TestUserLogin:
         response_login = requests.post(AppUrls.login_url, data=auth_data, headers={'accessToken': token})
 
         assert response_login.status_code == 401
-        assert AppResponseMessages.invalid_creds_error in response_login.text
+        assert AppResponseMessages.INVALID_CREDS_ERROR in response_login.text
 
 class TestUserUpdateData:
 
@@ -99,7 +99,7 @@ class TestUserUpdateData:
         update_response = requests.patch(AppUrls.user_info_url, data=data_to_update, headers={'authorization': token})
 
         assert update_response.status_code == 200
-        assert AppResponseMessages.success_message in update_response.text
+        assert AppResponseMessages.SUCCESS_MESSAGE in update_response.text
 
     @allure.title('Обновление информации неавторизованного пользователя')
     @allure.description('Обновляем email/пароль/имя неавторизованного пользователя. Сверяем код и текст ошибки')
@@ -118,4 +118,4 @@ class TestUserUpdateData:
         update_response = requests.patch(AppUrls.user_info_url, data=data_to_update, headers={'authorization': ""})
 
         assert update_response.status_code == 401
-        assert AppResponseMessages.no_auth_error in update_response.text
+        assert AppResponseMessages.NO_AUTH_ERROR in update_response.text

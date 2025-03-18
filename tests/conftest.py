@@ -28,6 +28,6 @@ def create_login_delete_account():
 def create_order(create_login_delete_account):
     _, __, ___, token = create_login_delete_account
 
-    requests.post(AppUrls.order_url, data=IngredientsData.payload, headers={'authorization': token})
+    requests.post(AppUrls.order_url, data=IngredientsData.PAYLOAD, headers={'authorization': token})
 
     return token
